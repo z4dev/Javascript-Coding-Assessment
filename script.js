@@ -1,44 +1,39 @@
+const quoteList = document.getElementById("quoteList");
+const searchInput = document.getElementById("searchInput");
+const errorMessage = document.querySelector(".error-message");
 
-    const quoteList = document.getElementById("quoteList");
-    const searchInput = document.getElementById("searchInput");
-    const errorMessage = document.getElementById("errorMessage");
-  
-    let quotes = [];
-  
-    fetch("https://dummyjson.com/quotes ")
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        quotes = data.quotes; 
-        displayQuotes(quotes); 
-      })
-      .catch((error) => {
-        console.error("Error fetching quotes:", error);
-        errorMessage.textContent = "Failed to load quotes. Please try again later.";
-      });
-  
-    function displayQuotes(quoteArray) {
-      quoteList.innerHTML = "";
-      if (quoteArray.length === 0) {
-        quoteList.innerHTML = "<li>No matching quotes found.</li>";
-        return;
-      }
-  
-      quoteArray.forEach((quote) => {
-        const li = document.createElement("li");
-        li.textContent = `"${quote.quote}" — ${quote.author}`;
-        quoteList.appendChild(li);
-      });
-    }
-  
-    searchInput.addEventListener("input", () => {
-      const searchTerm = searchInput.value.toLowerCase();
-      const filteredQuotes = quotes.filter((quoteItem) =>
-        quoteItem.quote.toLowerCase().includes(searchTerm),
-      );
-      displayQuotes(filteredQuotes);
-    });
+const URL = "https://dummyjson.com/quotes";
+
+let quotesContainer = [];
+
+async function getQuotes(link = URL) {
+  const response = await fetch(link);
+  if (!response.ok) {
+    return (errorMessage.innerHTML =
+      "Error With Fetching Data Please check your internet");
+  }
+
+  const data = await response.json();
+  quotesContainer = await data.quotes;
+  displayData(quotesContainer);
+}
+
+async function displayData(quotes) {
+  quoteList.textContent = "";
+  quotes.forEach((quoteObject) => {
+    let li = document.createElement("li");
+    li.textContent = quoteObject.quote;
+    quoteList.appendChild(li);
+  });
+}
+
+searchInput.addEventListener("input", () => {
+  let value = searchInput.value;
+  let quotes = quotesContainer.filter((el) => {
+    return el.quote.includes(value);
+  });
+
+  displayData(quotes);
+});
+
+getQuotes();
