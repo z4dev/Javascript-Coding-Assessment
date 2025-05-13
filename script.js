@@ -7,15 +7,18 @@ const URL = "https://dummyjson.com/quotes";
 let quotesContainer = [];
 
 async function getQuotes(link = URL) {
-  const response = await fetch(link);
-  if (!response.ok) {
-    return (errorMessage.innerHTML =
-      "Error With Fetching Data Please check your internet");
+  try {
+    const response = await fetch(link);
+    if (!response.ok) {
+      throw new Error(`HTTP error:${response.status}`);
+    }
+    const data = await response.json();
+    quotesContainer = await data.quotes;
+    displayData(quotesContainer);
+  } catch (err) {
+    errorMessage.textContent =
+      "Error fetching data. Please check your internet connection.";
   }
-
-  const data = await response.json();
-  quotesContainer = await data.quotes;
-  displayData(quotesContainer);
 }
 
 function displayData(quotes) {
