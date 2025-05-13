@@ -18,7 +18,7 @@ async function getQuotes(link = URL) {
   displayData(quotesContainer);
 }
 
-async function displayData(quotes) {
+function displayData(quotes) {
   quoteList.textContent = "";
   quotes.forEach((quoteObject) => {
     let li = document.createElement("li");
