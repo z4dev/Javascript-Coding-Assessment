@@ -31,12 +31,12 @@ function displayData(quotes) {
 }
 
 searchInput.addEventListener("input", () => {
-  let value = searchInput.value;
-  let quotes = quotesContainer.filter((el) => {
-    return el.quote.includes(value);
+    let value = searchInput.value.toLowerCase(); 
+    let quotes = quotesContainer.filter((el) => {
+      return el.quote.toLowerCase().includes(value);
+    });
+  
+    displayData(quotes);
   });
-
-  displayData(quotes);
-});
 
 getQuotes();
